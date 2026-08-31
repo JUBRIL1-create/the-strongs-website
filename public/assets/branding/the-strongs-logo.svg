@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" fill="none">
+  <!-- THE STRONGS Symbol: An interlocking geometric shield of forward arrows and leaves -->
+  <g transform="translate(10, 8)">
+    <rect width="44" height="44" rx="12" fill="#059669" fill-opacity="0.1"/>
+    <path d="M14 22L22 14L30 22M22 15V32" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16 28C16 28 19 32 22 32C25 32 28 28 28 28" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <!-- Typography -->
+  <text x="66" y="32" fill="#111827" font-family="'Syne', 'Arial Black', sans-serif" font-weight="800" font-size="20" letter-spacing="1">THE STRONGS</text>
+  <text x="66" y="46" fill="#059669" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="9" letter-spacing="2">INNOVATING FOR A BETTER TOMORROW</text>
+</svg>

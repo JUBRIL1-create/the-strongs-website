@@ -1,19 +1,42 @@
-import React, { useState } from 'react';
-import { Search, Compass, ArrowRight, Filter, ShieldCheck } from 'lucide-react';
-import { PROJECTS_DATA } from '../data/projects';
+import React, { useState, useEffect } from 'react';
+import { Search, Compass, ArrowRight, Filter, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { Project, ProjectStatus } from '../types';
 import { SEO } from '../components/SEO';
+import { getProjects } from '../services/supabaseService';
 
 interface ProjectsPageProps {
   onNavigate: (path: string) => void;
 }
 
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
 
+  const loadProjects = () => {
+    setLoading(true);
+    setError(null);
+    getProjects()
+      .then((data) => {
+        setProjects(data || []);
+      })
+      .catch((err) => {
+        console.error('Error fetching projects from Supabase:', err);
+        setError(err instanceof Error ? err.message : 'Unable to connect to the database.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
   // Filter projects based on search query & status
-  const filteredProjects = PROJECTS_DATA.filter((project) => {
+  const filteredProjects = projects.filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -99,7 +122,58 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
 
       {/* Projects Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {filteredProjects.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {[1, 2].map((n) => (
+              <div
+                key={n}
+                className="p-8 bg-white rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 animate-pulse"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="h-6 w-24 bg-slate-200 rounded-full" />
+                  <div className="h-6 w-32 bg-slate-200 rounded-md" />
+                </div>
+                <div className="h-8 w-3/4 bg-slate-200 rounded-lg" />
+                <div className="space-y-2">
+                  <div className="h-4 w-full bg-slate-200 rounded" />
+                  <div className="h-4 w-5/6 bg-slate-200 rounded" />
+                </div>
+                <div className="pt-6 border-t border-slate-100 flex justify-between items-center">
+                  <div className="h-4 w-28 bg-slate-200 rounded" />
+                  <div className="h-9 w-36 bg-slate-200 rounded-xl" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="p-12 sm:p-16 text-center bg-white rounded-3xl border border-rose-200 shadow-2xs space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-display font-bold text-xl text-slate-900">
+                Failed to load projects
+              </h3>
+              <p className="text-slate-600 text-sm max-w-md mx-auto">
+                {error}
+              </p>
+            </div>
+            <button
+              onClick={loadProjects}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Retry</span>
+            </button>
+          </div>
+        ) : projects.length === 0 ? (
+          <div className="p-16 text-center bg-white rounded-3xl border border-slate-200 shadow-2xs space-y-3">
+            <p className="font-display font-bold text-xl text-slate-800">No projects found</p>
+            <p className="text-slate-500 text-sm max-w-md mx-auto">
+              There are currently no projects recorded in the database.
+            </p>
+          </div>
+        ) : filteredProjects.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {filteredProjects.map((project) => (
               <div

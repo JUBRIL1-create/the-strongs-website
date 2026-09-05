@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, User, ArrowRight, Tag } from 'lucide-react';
 import { NEWS_ARTICLES } from '../data/news';
+import { NewsArticle } from '../types';
 import { SEO } from '../components/SEO';
+import { getNews } from '../services/supabaseService';
 
 interface NewsPageProps {
   onNavigate: (path: string) => void;
 }
 
 export const NewsPage: React.FC<NewsPageProps> = ({ onNavigate }) => {
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    getNews()
+      .then((data) => {
+        if (isMounted) {
+          setArticles(data || []);
+        }
+      })
+      .catch((err) => console.warn('Error loading news:', err))
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
@@ -33,9 +55,25 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onNavigate }) => {
 
       {/* Articles Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {NEWS_ARTICLES.length > 0 ? (
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {NEWS_ARTICLES.map((article) => (
+            {[1, 2].map((n) => (
+              <div
+                key={n}
+                className="p-8 bg-white rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 animate-pulse"
+              >
+                <div className="h-5 w-28 bg-slate-200 rounded-md" />
+                <div className="h-7 w-3/4 bg-slate-200 rounded-lg" />
+                <div className="space-y-2">
+                  <div className="h-4 w-full bg-slate-200 rounded" />
+                  <div className="h-4 w-5/6 bg-slate-200 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : articles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {articles.map((article) => (
               <article
                 key={article.id}
                 className="p-8 bg-white rounded-3xl border border-slate-200/90 hover:border-emerald-300 transition-all shadow-2xs space-y-4 flex flex-col justify-between"

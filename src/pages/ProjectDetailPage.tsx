@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ArrowLeft,
   Calendar,
@@ -11,10 +11,13 @@ import {
   Building2,
   Layers,
   Sparkles,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
-import { PROJECTS_DATA } from '../data/projects';
+import { Project } from '../types';
 import { BrandLogo } from '../components/BrandLogo';
 import { SEO } from '../components/SEO';
+import { getProjectBySlug, getProjects } from '../services/supabaseService';
 
 interface ProjectDetailPageProps {
   slug: string;
@@ -25,7 +28,95 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   slug,
   onNavigate,
 }) => {
-  const project = PROJECTS_DATA.find((p) => p.slug === slug);
+  const [project, setProject] = useState<Project | null>(null);
+  const [allProjects, setAllProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProjectData = () => {
+    setLoading(true);
+    setError(null);
+
+    Promise.all([getProjectBySlug(slug), getProjects()])
+      .then(([proj, list]) => {
+        setProject(proj);
+        setAllProjects(list || []);
+      })
+      .catch((err) => {
+        console.error('Error loading project details from Supabase:', err);
+        setError(err instanceof Error ? err.message : 'Failed to retrieve project details from the database.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchProjectData();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <div className="space-y-4 animate-pulse">
+            <div className="h-6 w-36 bg-slate-200 rounded-lg" />
+            <div className="h-10 w-2/3 bg-slate-200 rounded-xl" />
+            <div className="h-4 w-full max-w-2xl bg-slate-200 rounded" />
+            <div className="h-4 w-5/6 max-w-2xl bg-slate-200 rounded" />
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="h-56 bg-white rounded-3xl border border-slate-200 animate-pulse p-6 space-y-3">
+              <div className="h-6 w-40 bg-slate-200 rounded" />
+              <div className="h-4 w-full bg-slate-200 rounded" />
+              <div className="h-4 w-4/5 bg-slate-200 rounded" />
+            </div>
+            <div className="h-56 bg-white rounded-3xl border border-slate-200 animate-pulse p-6 space-y-3">
+              <div className="h-6 w-40 bg-slate-200 rounded" />
+              <div className="h-4 w-full bg-slate-200 rounded" />
+              <div className="h-4 w-4/5 bg-slate-200 rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#fafafa] pt-32 pb-20 text-center">
+        <div className="max-w-md mx-auto px-4 space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <h1 className="font-display font-bold text-2xl text-slate-900">
+            Unable to Load Project
+          </h1>
+          <p className="text-slate-600 text-sm">
+            {error}
+          </p>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <button
+              onClick={fetchProjectData}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 text-white font-semibold text-xs hover:bg-emerald-800 transition-colors cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Try Again</span>
+            </button>
+            <button
+              onClick={() => onNavigate('/projects')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs hover:bg-slate-200 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Projects Overview</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -35,11 +126,11 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
             Project Not Found
           </h1>
           <p className="text-slate-600 text-sm">
-            The requested project story could not be located or may have been updated.
+            The requested project story could not be located in the database or may have been updated.
           </p>
           <button
             onClick={() => onNavigate('/projects')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 text-white font-semibold text-xs hover:bg-emerald-800 transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 text-white font-semibold text-xs hover:bg-emerald-800 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Projects List</span>
@@ -50,7 +141,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   }
 
   // Related projects filtering
-  const relatedProjects = PROJECTS_DATA.filter((p) => p.slug !== project.slug);
+  const relatedProjects = allProjects.filter((p) => p.slug !== project.slug);
 
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
@@ -223,14 +314,26 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
         )}
 
         {/* Impact Section */}
-        {project.impact && (
-          <div className="p-8 bg-emerald-50/80 rounded-3xl border border-emerald-200 text-slate-900 space-y-2">
+        {(project.impact || (project.expectedImpact && project.expectedImpact.length > 0)) && (
+          <div className="p-8 bg-emerald-50/80 rounded-3xl border border-emerald-200 text-slate-900 space-y-4">
             <h2 className="font-display font-bold text-xl text-emerald-900">
               Anticipated & Grassroots Impact
             </h2>
-            <p className="text-slate-700 text-sm leading-relaxed">
-              {project.impact}
-            </p>
+            {project.impact && (
+              <p className="text-slate-700 text-sm leading-relaxed">
+                {project.impact}
+              </p>
+            )}
+            {project.expectedImpact && project.expectedImpact.length > 0 && (
+              <ul className="space-y-2.5 text-xs text-slate-700">
+                {project.expectedImpact.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
 

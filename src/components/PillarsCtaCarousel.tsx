@@ -14,6 +14,8 @@ interface SlideData {
   desktopObjectPosition: string;
 }
 
+const BASE_PATH = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
+
 const SLIDES: SlideData[] = [
   {
     id: 'sustainability',
@@ -21,7 +23,7 @@ const SLIDES: SlideData[] = [
     statement: "Building progress that meets today's needs while protecting tomorrow.",
     supporting:
       'THE STRONGS pursues solutions that create meaningful progress while recognizing the responsibility we have to future generations.',
-    imageUrl: 'https://i.postimg.cc/nr19h6ZR/dji-agras-agriculture-4208863-1280.jpg',
+    imageUrl: `${BASE_PATH}assets/images/carousel/sustainability.jpg`,
     imageAlt: 'Agricultural technology and sustainable farming drone in open field',
     textPositionClass: 'justify-end lg:justify-start items-start text-left',
     gradientClass:
@@ -35,7 +37,7 @@ const SLIDES: SlideData[] = [
     statement: 'Turning bold ideas into solutions that move society forward.',
     supporting:
       'We believe innovation begins with curiosity, grows through creativity and becomes meaningful when it solves real problems.',
-    imageUrl: 'https://i.postimg.cc/B6H1djVz/piro4d-lightbulb-2632075-1280.jpg',
+    imageUrl: `${BASE_PATH}assets/images/carousel/innovation.jpg`,
     imageAlt: 'Illuminated lightbulb representing ideas, creativity and innovative solutions',
     textPositionClass: 'justify-end lg:justify-start items-start text-left',
     gradientClass:
@@ -49,7 +51,7 @@ const SLIDES: SlideData[] = [
     statement: 'Using technology to transform possibilities into real-world impact.',
     supporting:
       'We explore and apply technology as a tool for solving challenges, improving lives and shaping a smarter future.',
-    imageUrl: 'https://i.postimg.cc/9QQZrFDj/this-is-engineering-woman-8499959-1280.jpg',
+    imageUrl: `${BASE_PATH}assets/images/carousel/technology.jpg`,
     imageAlt: 'Engineer working with modern technology and digital equipment',
     textPositionClass: 'justify-end lg:justify-start items-start text-left',
     gradientClass:
@@ -64,7 +66,7 @@ const SLIDES: SlideData[] = [
       'Turning curiosity into knowledge, knowledge into solutions, and ideas into meaningful impact.',
     supporting:
       'Research drives our understanding, challenges assumptions and helps transform questions into discoveries that can shape the future.',
-    imageUrl: 'https://i.postimg.cc/SKzXMXkn/geralt-doctor-6676747-1280.jpg',
+    imageUrl: `${BASE_PATH}assets/images/carousel/research.jpg`,
     imageAlt: 'Medical researcher and healthcare scientist analysing diagnostic research data',
     textPositionClass: 'justify-end lg:justify-start items-start text-left',
     gradientClass:

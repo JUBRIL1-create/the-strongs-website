@@ -22,6 +22,7 @@ export interface Project {
   activities?: string | null;
   results?: string | null;
   impact?: string | null;
+  expectedImpact?: string[];
   images?: string[];
   videos?: string[];
   partners?: string[];

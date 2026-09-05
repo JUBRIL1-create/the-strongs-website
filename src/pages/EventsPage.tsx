@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, ArrowRight, ExternalLink } from 'lucide-react';
 import { EVENTS_DATA } from '../data/events';
+import { EventItem } from '../types';
 import { SEO } from '../components/SEO';
+import { getEvents } from '../services/supabaseService';
 
 interface EventsPageProps {
   onNavigate: (path: string) => void;
 }
 
 export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    getEvents()
+      .then((data) => {
+        if (isMounted) {
+          setEvents(data || []);
+        }
+      })
+      .catch((err) => console.warn('Error loading events:', err))
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
@@ -33,9 +55,24 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
 
       {/* Events Listing */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {EVENTS_DATA.length > 0 ? (
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {EVENTS_DATA.map((event) => (
+            <div className="p-8 bg-white rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 animate-pulse">
+              <div className="flex justify-between items-center">
+                <div className="h-6 w-28 bg-slate-200 rounded-full" />
+                <div className="h-5 w-24 bg-slate-200 rounded-md" />
+              </div>
+              <div className="h-7 w-3/4 bg-slate-200 rounded-lg" />
+              <div className="h-4 w-40 bg-slate-200 rounded" />
+              <div className="space-y-2">
+                <div className="h-4 w-full bg-slate-200 rounded" />
+                <div className="h-4 w-5/6 bg-slate-200 rounded" />
+              </div>
+            </div>
+          </div>
+        ) : events.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {events.map((event) => (
               <div
                 key={event.id}
                 className="p-8 bg-white rounded-3xl border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between"

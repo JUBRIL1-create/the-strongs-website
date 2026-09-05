@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { TEAM_MEMBERS } from '../data/team';
+import { TeamMember } from '../types';
 import { SEO } from '../components/SEO';
+import { getTeamMembers } from '../services/supabaseService';
 
 interface TeamPageProps {
   onNavigate: (path: string) => void;
@@ -30,11 +32,31 @@ function resolvePhotoUrl(photo: string | null): string | null {
 }
 
 export const TeamPage: React.FC<TeamPageProps> = ({ onNavigate }) => {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    getTeamMembers()
+      .then((data) => {
+        if (isMounted) {
+          setTeamMembers(data || []);
+        }
+      })
+      .catch((err) => console.warn('Error loading team members:', err))
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
         title="Our Team & Founders"
-        description="Meet the six founding members of THE STRONGS."
+        description="Meet the founding members of THE STRONGS."
         slug="team"
       />
 
@@ -48,15 +70,38 @@ export const TeamPage: React.FC<TeamPageProps> = ({ onNavigate }) => {
             The Founding Team
           </h1>
           <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-            THE STRONGS was founded in 2026 by six visionaries who came together in medical school around a shared mission of applying innovation and practical technology to real-world grassroots and industrial challenges.
+            THE STRONGS was founded in 2026 by visionaries who came together in medical school around a shared mission of applying innovation and practical technology to real-world grassroots and industrial challenges.
           </p>
         </div>
       </div>
 
       {/* Team Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {TEAM_MEMBERS.map((member) => (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div
+                key={n}
+                className="p-8 bg-white rounded-3xl border border-slate-200/90 shadow-2xs space-y-5 animate-pulse"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-200 shrink-0" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-5 w-3/4 bg-slate-200 rounded" />
+                    <div className="h-4 w-1/2 bg-slate-200 rounded" />
+                  </div>
+                </div>
+                <div className="space-y-2 pt-2">
+                  <div className="h-3 w-full bg-slate-200 rounded" />
+                  <div className="h-3 w-5/6 bg-slate-200 rounded" />
+                  <div className="h-3 w-4/6 bg-slate-200 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {teamMembers.map((member) => (
             <div
               key={member.id}
               className="p-8 bg-white rounded-3xl border border-slate-200/90 shadow-2xs hover:border-emerald-300 transition-all space-y-5 flex flex-col justify-between"
@@ -112,7 +157,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ onNavigate }) => {
             </div>
           ))}
         </div>
-      </div>
+      )}
     </div>
-  );
+  </div>
+);
 };

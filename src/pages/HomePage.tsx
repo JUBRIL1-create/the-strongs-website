@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass,
   ArrowRight,
@@ -18,13 +18,14 @@ import {
   Globe2,
 } from 'lucide-react';
 import { SITE_CONFIG } from '../config/site';
-import { PROJECTS_DATA } from '../data/projects';
 import { NEWS_ARTICLES } from '../data/news';
 import { FAQ_ITEMS } from '../data/faq';
+import { Project, NewsArticle } from '../types';
 import { BrandLogo } from '../components/BrandLogo';
 import { SEO } from '../components/SEO';
 import { HeroImageSection } from '../components/HeroImageSection';
 import { PillarsCtaCarousel } from '../components/PillarsCtaCarousel';
+import { getProjects, getNews } from '../services/supabaseService';
 
 interface HomePageProps {
   onNavigate: (path: string) => void;
@@ -32,9 +33,38 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [openFaq, setOpenFaq] = useState<string | null>("faq-1");
+  const [projectsList, setProjectsList] = useState<Project[]>([]);
+  const [newsList, setNewsList] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const flagshipProject = PROJECTS_DATA.find((p) => p.id === 'strongsconnect') || PROJECTS_DATA[0];
-  const recentNews = NEWS_ARTICLES.slice(0, 3);
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([getProjects(), getNews()])
+      .then(([projData, newsData]) => {
+        if (isMounted) {
+          if (projData && projData.length > 0) {
+            setProjectsList(projData);
+          }
+          if (newsData && newsData.length > 0) {
+            setNewsList(newsData);
+          }
+        }
+      })
+      .catch((err) => console.warn('Error loading home data:', err))
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const flagshipProject =
+    projectsList.find((p) => p.id === 'strongsconnect' || p.slug === 'strongsconnect' || p.id === '1') ||
+    projectsList[0] ||
+    null;
+  const recentNews = newsList.slice(0, 3);
 
   const toggleFaq = (id: string) => {
     setOpenFaq(openFaq === id ? null : id);
@@ -208,28 +238,39 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     />
                   </div>
                   <p className="text-slate-300 text-base sm:text-lg leading-relaxed pt-3">
-                    &ldquo;{flagshipProject.shortDescription}&rdquo;
+                    &ldquo;{flagshipProject?.shortDescription || "A pioneering healthcare and emergency support platform providing digital access to health information and emergency services."}&rdquo;
                   </p>
                 </div>
 
                 {/* Core components bullets */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-slate-300">
-                  <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Smart Drug Verification Analysis (Proposed)</span>
-                  </div>
-                  <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Clinical Case Research Exchange (Proposed)</span>
-                  </div>
-                  <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Interactive First Aid Emergency Modules</span>
-                  </div>
-                  <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Verified Healthcare Information Layer</span>
-                  </div>
+                  {flagshipProject?.components && flagshipProject.components.length > 0 ? (
+                    flagshipProject.components.slice(0, 4).map((comp) => (
+                      <div key={comp.name} className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>{comp.name}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Smart Drug Verification Analysis (Proposed)</span>
+                      </div>
+                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Clinical Case Research Exchange (Proposed)</span>
+                      </div>
+                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Interactive First Aid Emergency Modules</span>
+                      </div>
+                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Verified Healthcare Information Layer</span>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Accuracy Disclaimer */}
@@ -242,7 +283,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
                 <div className="pt-2">
                   <button
-                    onClick={() => onNavigate(`/projects/${flagshipProject.slug}`)}
+                    onClick={() => onNavigate(`/projects/${flagshipProject?.slug || 'strongsconnect'}`)}
                     className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-md transition-all cursor-pointer"
                   >
                     <span>Explore StrongsConnect Project Story</span>
@@ -303,7 +344,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {PROJECTS_DATA.map((project) => (
+            {projectsList.map((project) => (
               <div
                 key={project.id}
                 className="bg-[#fafafa] p-6 sm:p-8 rounded-3xl border border-slate-200/80 hover:border-emerald-300 transition-all shadow-2xs hover:shadow-md flex flex-col justify-between"

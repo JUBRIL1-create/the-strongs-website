@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Instagram, Youtube, Linkedin, Send, MapPin, Check, Copy, Info } from 'lucide-react';
 import { SITE_CONFIG } from '../config/site';
 import { SEO } from '../components/SEO';
+import { getSiteSettings, SiteSettings } from '../services/supabaseService';
 
 interface ContactPageProps {
   onNavigate: (path: string) => void;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = () => {
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,8 +20,22 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  useEffect(() => {
+    let isMounted = true;
+    getSiteSettings().then((settings) => {
+      if (isMounted && settings) {
+        setSiteSettings(settings);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const contactEmail = siteSettings?.contact_email || siteSettings?.contactEmail || (typeof siteSettings?.email === 'string' ? siteSettings.email : SITE_CONFIG.contact.email);
+
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText(SITE_CONFIG.contact.email);
+    navigator.clipboard.writeText(contactEmail);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 3000);
   };
@@ -34,7 +50,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
       `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
     );
     
-    window.location.href = `mailto:${SITE_CONFIG.contact.email}?subject=${mailtoSubject}&body=${mailtoBody}`;
+    window.location.href = `mailto:${contactEmail}?subject=${mailtoSubject}&body=${mailtoBody}`;
     setFormSubmitted(true);
   };
 

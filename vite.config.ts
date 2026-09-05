@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({command, mode}) => {
   return {
-    base: '/the-strongs-website/',
+    base: process.env.VITE_BASE_PATH || (command === 'build' || mode === 'production' ? '/the-strongs-website/' : '/'),
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

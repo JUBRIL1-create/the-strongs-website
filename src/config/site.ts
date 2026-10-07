@@ -63,6 +63,6 @@ export const SITE_CONFIG = {
       "HealthTech",
       "practical technology",
     ],
-    siteUrl: "https://thestrongs.org",
+    siteUrl: "https://strongsinitiative.com",
   },
 };

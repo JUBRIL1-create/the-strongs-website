@@ -44,6 +44,24 @@ export const SEO: React.FC<SEOProps> = ({
       ogImg.setAttribute('content', SITE_CONFIG.logos.profileImage);
     }
 
+    // Update canonical link dynamically
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonicalUrl);
+
+    // Update Open Graph URL dynamically
+    let ogUrl = document.querySelector('meta[property="og:url"]');
+    if (!ogUrl) {
+      ogUrl = document.createElement('meta');
+      ogUrl.setAttribute('property', 'og:url');
+      document.head.appendChild(ogUrl);
+    }
+    ogUrl.setAttribute('content', canonicalUrl);
+
     // Inject JSON-LD structured data
     const existingScript = document.getElementById('json-ld-org');
     if (!existingScript) {
@@ -56,7 +74,7 @@ export const SEO: React.FC<SEOProps> = ({
         name: SITE_CONFIG.name,
         alternateName: SITE_CONFIG.fullName,
         url: SITE_CONFIG.seo.siteUrl,
-        logo: `${SITE_CONFIG.seo.siteUrl}${SITE_CONFIG.logos.primary}`,
+        logo: `${SITE_CONFIG.seo.siteUrl}/assets/branding/the-strongs-logo.png`,
         image: SITE_CONFIG.logos.profileImage,
         description: SITE_CONFIG.seo.defaultDescription,
         foundingDate: '2026',

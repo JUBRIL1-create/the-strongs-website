@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thestrongs.org/sitemap.xml
+Sitemap: https://strongsinitiative.com/sitemap.xml

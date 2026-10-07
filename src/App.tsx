@@ -14,45 +14,53 @@ import { ContactPage } from './pages/ContactPage';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
-    // Check initial window location path or hash for GitHub Pages fallback
     if (typeof window !== 'undefined') {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) return hash;
-      return window.location.pathname || '/';
+      // If a legacy hash URL was accessed (e.g. /#/projects), migrate to clean URL
+      if (window.location.hash) {
+        const legacyPath = window.location.hash.replace(/^#\/?/, '/');
+        if (legacyPath && legacyPath !== '/') {
+          window.history.replaceState(null, '', legacyPath);
+          return legacyPath;
+        }
+      }
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+      return pathname;
     }
     return '/';
   });
 
-  // Handle route change
+  // Handle clean History API route change
   const navigate = (path: string) => {
-    setCurrentPath(path);
+    const targetPath = path.startsWith('/') ? path : `/${path}`;
+    const normalized = targetPath === '/' ? '/' : targetPath.replace(/\/+$/, '');
+    setCurrentPath(normalized);
     if (typeof window !== 'undefined') {
-      window.location.hash = path;
+      if (window.location.pathname !== normalized) {
+        window.history.pushState(null, '', normalized);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        setCurrentPath(hash);
-      } else {
-        setCurrentPath(window.location.pathname || '/');
-      }
+    const handlePopState = () => {
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+      setCurrentPath(pathname);
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   // Determine view component
   const renderView = () => {
-    if (currentPath.startsWith('/projects/')) {
-      const slug = currentPath.replace('/projects/', '');
+    const normalizedPath = currentPath === '/' ? '/' : currentPath.replace(/\/+$/, '');
+    if (normalizedPath.startsWith('/projects/')) {
+      const slug = normalizedPath.replace('/projects/', '');
       return <ProjectDetailPage slug={slug} onNavigate={navigate} />;
     }
 
-    switch (currentPath) {
+    switch (normalizedPath) {
       case '/about':
         return <AboutPage onNavigate={navigate} />;
       case '/what-we-do':

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ChevronDown, Compass, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronDown, Compass } from 'lucide-react';
 
 interface HeroImageSectionProps {
   onNavigate: (path: string) => void;
@@ -43,14 +43,6 @@ export const HeroImageSection: React.FC<HeroImageSectionProps> = ({ onNavigate }
       {/* Main Content Area */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[520px] xs:min-h-[560px] sm:min-h-[600px] lg:min-h-[640px] flex flex-col justify-between">
         
-        {/* Eyebrow / Category indicator */}
-        <div className="pt-2 sm:pt-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/50 sm:bg-white/10 backdrop-blur-md border border-white/20 text-emerald-300 text-xs font-semibold tracking-wider uppercase shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>THE STRONGS</span>
-          </div>
-        </div>
-
         {/* Central / Left Headline & Copy */}
         <div className="max-w-2xl lg:max-w-3xl my-auto py-8 sm:py-12 space-y-5 sm:space-y-6 text-left">
           <h1 className="font-display font-extrabold text-3xl xs:text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.12] drop-shadow-md">

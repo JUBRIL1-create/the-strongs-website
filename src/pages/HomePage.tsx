@@ -2,20 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   Compass,
   ArrowRight,
-  Lightbulb,
-  Microscope,
-  Cpu,
-  Leaf,
   ChevronDown,
-  Sparkles,
   CheckCircle2,
-  Users,
-  Building2,
-  Layers,
   Calendar,
-  Tag,
   ShieldAlert,
-  Globe2,
 } from 'lucide-react';
 import { SITE_CONFIG } from '../config/site';
 import { NEWS_ARTICLES } from '../data/news';
@@ -77,133 +67,39 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       {/* SECTION 1 — PREMIUM HERO IMAGE SECTION */}
       <HeroImageSection onNavigate={onNavigate} />
 
-      {/* SECTION 2 — INNOVATION OVERVIEW & ECOSYSTEM */}
-      <section id="home-overview" className="relative py-20 lg:py-28 overflow-hidden bg-gradient-to-b from-white via-white to-[#fafafa] border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            
-            {/* Hero Left Content */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              {/* Tagline Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/70 border border-emerald-200/80 text-emerald-800 text-xs font-semibold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{SITE_CONFIG.tagline}</span>
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 tracking-tight leading-[1.1]">
-                Innovation that moves <span className="text-emerald-700">ideas into impact.</span>
-              </h1>
-
-              {/* Supporting Message */}
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
-                We drive innovation, research and practical technology solutions that address real-world challenges and help create a smarter, more sustainable future across communities and industries.
-              </p>
-
-              {/* Hero Action Buttons */}
-              <div className="pt-2 flex flex-wrap items-center gap-4">
-                <button
-                  onClick={() => onNavigate('/projects')}
-                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm shadow-md transition-all duration-200 hover:shadow-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 active:scale-[0.98]"
-                >
-                  <Compass className="w-4 h-4 text-emerald-200" />
-                  <span>Explore Our Projects</span>
-                  <ArrowRight className="w-4 h-4 opacity-80" />
-                </button>
-
-                <button
-                  onClick={() => onNavigate('/about')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200/90 shadow-2xs hover:border-slate-300 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
-                >
-                  <span>Learn More</span>
-                </button>
-              </div>
-
-              {/* Trust & Location Indicator */}
-              <div className="pt-6 border-t border-slate-200/60 flex flex-wrap items-center gap-6 text-xs text-slate-500">
-                <div className="flex items-center gap-2">
-                  <Globe2 className="w-4 h-4 text-emerald-600" />
-                  <span>Founded 2026 in Lagos State, Nigeria</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>Grassroots & Industry Focus</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Hero Right Visual: Authentic Graphic Diagram */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md lg:max-w-none bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-xl shadow-emerald-950/5">
-                
-                {/* Visual Header */}
-                <div className="flex items-center justify-between pb-6 border-b border-slate-100">
-                  <BrandLogo size="sm" showTagline={false} />
-                  <span className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-[11px] font-semibold tracking-wider">
-                    INNOVATION ECOSYSTEM
-                  </span>
-                </div>
-
-                {/* Conceptual Nodes Illustration */}
-                <div className="py-8 space-y-4">
-                  {/* Step 1 */}
-                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 flex items-center gap-3.5 transition-all hover:bg-emerald-50/50 hover:border-emerald-200">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
-                      01
-                    </div>
-                    <div>
-                      <h4 className="font-display font-bold text-slate-900 text-sm">Research & Problem Framing</h4>
-                      <p className="text-xs text-slate-500">Exploring real-world grassroots and industrial challenges.</p>
-                    </div>
-                  </div>
-
-                  {/* Step 2 */}
-                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 flex items-center gap-3.5 transition-all hover:bg-emerald-50/50 hover:border-emerald-200">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
-                      02
-                    </div>
-                    <div>
-                      <h4 className="font-display font-bold text-slate-900 text-sm">Practical Technology Development</h4>
-                      <p className="text-xs text-slate-500">Building user-centered software, AI models, & hardware tools.</p>
-                    </div>
-                  </div>
-
-                  {/* Step 3 */}
-                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 flex items-center gap-3.5 transition-all hover:bg-emerald-50/50 hover:border-emerald-200">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
-                      03
-                    </div>
-                    <div>
-                      <h4 className="font-display font-bold text-slate-900 text-sm">Grassroots & Sustainable Impact</h4>
-                      <p className="text-xs text-slate-500">Delivering lasting value directly to people and communities.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer caption */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span>Technology as a means to impact</span>
-                  <span className="font-semibold text-emerald-700">Flagship: StrongsConnect</span>
-                </div>
-              </div>
-            </div>
-
+      {/* SECTION 2 — WHO WE ARE */}
+      <section id="home-overview" className="py-16 sm:py-20 bg-white border-b border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
+          <div className="space-y-3">
+            <span className="text-xs font-semibold text-emerald-700 tracking-widest uppercase">
+              WHO WE ARE
+            </span>
+            <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-slate-900 tracking-tight">
+              Building practical solutions for a better tomorrow.
+            </h2>
+            <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+              THE STRONGS brings innovation, research and practical technology closer to people and industries by developing solutions designed around real-world needs.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* SECTION 2 — HOMEPAGE INTRODUCTION */}
-      <section className="py-16 bg-white border-b border-slate-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4">
-          <span className="text-xs font-semibold text-emerald-700 tracking-widest uppercase">
-            WHO WE ARE
-          </span>
-          <h2 className="font-display font-bold text-2xl sm:text-3xl text-slate-900">
-            Building practical solutions for a better tomorrow.
-          </h2>
-          <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-            THE STRONGS brings innovation, research and practical technology closer to people and industries by developing solutions designed around real-world needs.
-          </p>
+          {/* Action Buttons */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
+            <button
+              onClick={() => onNavigate('/projects')}
+              className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm shadow-md transition-all duration-200 hover:shadow-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 active:scale-[0.98]"
+            >
+              <Compass className="w-4 h-4 text-emerald-200" />
+              <span>Explore Our Projects</span>
+              <ArrowRight className="w-4 h-4 opacity-80" />
+            </button>
+
+            <button
+              onClick={() => onNavigate('/about')}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200/90 shadow-2xs hover:border-slate-300 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+            >
+              <span>Learn More</span>
+            </button>
+          </div>
         </div>
       </section>
 

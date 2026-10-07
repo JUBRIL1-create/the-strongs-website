@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight, Pause, Play, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Pause, Play } from 'lucide-react';
 
 interface SlideData {
   id: string;
@@ -172,11 +172,6 @@ export const PillarsCtaCarousel: React.FC<PillarsCtaCarouselProps> = ({ onNaviga
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-semibold tracking-wide">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>OUR CORE PILLARS</span>
-          </div>
-
           <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-tight">
             What Drives Our Innovation
           </h2>
@@ -199,7 +194,7 @@ export const PillarsCtaCarousel: React.FC<PillarsCtaCarouselProps> = ({ onNaviga
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          className="relative rounded-3xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800/80 w-full min-h-[580px] xs:min-h-[550px] sm:min-h-[560px] md:min-h-[500px] lg:min-h-[540px] md:aspect-[16/8] lg:aspect-[16/7] flex items-stretch focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+          className="relative rounded-3xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800/80 w-full min-h-[480px] xs:min-h-[480px] sm:min-h-[500px] md:min-h-[500px] lg:min-h-[540px] md:aspect-[16/8] lg:aspect-[16/7] flex items-stretch focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
         >
           {/* Slides */}
           {SLIDES.map((slide, index) => {
@@ -211,74 +206,35 @@ export const PillarsCtaCarousel: React.FC<PillarsCtaCarouselProps> = ({ onNaviga
                 aria-roledescription="slide"
                 aria-label={`Slide ${index + 1} of ${SLIDES.length}: ${slide.pillar}`}
                 aria-hidden={!isActive}
-                className={`absolute inset-0 transition-opacity duration-700 ease-in-out flex flex-col md:block ${
+                className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
                   isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
                 }`}
               >
-                {/* Mobile Image Section (< md) */}
-                <div className="relative w-full h-52 xs:h-60 sm:h-68 md:hidden shrink-0 overflow-hidden bg-slate-900">
+                {/* Background Image Container (Responsive Mobile & Desktop) */}
+                <div className="absolute inset-0 overflow-hidden">
                   <img
                     src={slide.imageUrl}
                     alt={slide.imageAlt}
-                    className={`w-full h-full object-cover ${slide.mobileObjectPosition}`}
+                    className={`w-full h-full object-cover ${slide.mobileObjectPosition} md:${slide.desktopObjectPosition} transform scale-100 transition-transform duration-1000 ease-out`}
                     referrerPolicy="no-referrer"
                     loading={index === 0 ? 'eager' : 'lazy'}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-black/25 to-transparent" />
+                  {/* Directional gradients on mobile: dark at bottom for text contrast while keeping image subjects authentic & visible */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 via-50% to-black/35 md:hidden" />
+                  {/* Desktop & Tablet gradient overlay */}
+                  <div className={`hidden md:block absolute inset-0 ${slide.gradientClass} transition-all duration-700`} />
+                </div>
 
-                  {/* Mobile Top Pill & Counter */}
-                  <div className="absolute top-3.5 inset-x-4 flex items-center justify-between z-10">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/25 backdrop-blur-md border border-emerald-400/40 text-emerald-300 text-[11px] font-bold tracking-widest uppercase shadow-sm">
+                {/* Content Overlay Area */}
+                <div className="relative z-10 w-full h-full p-5 sm:p-6 md:p-10 lg:p-14 flex flex-col justify-between">
+                  {/* Top Bar with Pillar Pill & Slide Counter */}
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-emerald-500/25 md:bg-emerald-500/20 backdrop-blur-md md:backdrop-blur-xs border border-emerald-400/40 text-emerald-300 text-[11px] sm:text-xs font-bold tracking-widest uppercase shadow-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       {slide.pillar}
                     </span>
 
-                    <span className="text-[11px] font-semibold tracking-wider text-slate-200 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15">
-                      0{index + 1} / 0{SLIDES.length}
-                    </span>
-                  </div>
-
-                  {/* Mobile Prev / Next overlay controls on image */}
-                  <div className="absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none z-10">
-                    <button
-                      onClick={prevSlide}
-                      aria-label="Previous slide"
-                      className="pointer-events-auto w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-sm flex items-center justify-center border border-white/20 active:scale-95 transition-transform cursor-pointer"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={nextSlide}
-                      aria-label="Next slide"
-                      className="pointer-events-auto w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-sm flex items-center justify-center border border-white/20 active:scale-95 transition-transform cursor-pointer"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Desktop & Tablet Background Image & Overlay (md+) */}
-                <div className="hidden md:block absolute inset-0">
-                  <img
-                    src={slide.imageUrl}
-                    alt={slide.imageAlt}
-                    className={`w-full h-full object-cover ${slide.desktopObjectPosition} transform scale-100 transition-transform duration-1000 ease-out`}
-                    referrerPolicy="no-referrer"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                  />
-                  <div className={`absolute inset-0 ${slide.gradientClass} transition-all duration-700`} />
-                </div>
-
-                {/* Content Overlay / Lower Area */}
-                <div className="relative flex-1 md:absolute md:inset-0 p-5 sm:p-6 md:p-10 lg:p-14 flex flex-col justify-between">
-                  {/* Desktop Top Bar (hidden on mobile) */}
-                  <div className="hidden md:flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 backdrop-blur-xs border border-emerald-400/40 text-emerald-300 text-xs font-bold tracking-widest uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      {slide.pillar}
-                    </span>
-
-                    <span className="text-xs font-semibold tracking-wider text-slate-300 bg-black/40 backdrop-blur-xs px-3 py-1 rounded-full border border-white/10">
+                    <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-slate-200 md:text-slate-300 bg-black/60 md:bg-black/40 backdrop-blur-md md:backdrop-blur-xs px-2.5 sm:px-3 py-1 rounded-full border border-white/15 md:border-white/10">
                       0{index + 1} / 0{SLIDES.length}
                     </span>
                   </div>
@@ -289,7 +245,7 @@ export const PillarsCtaCarousel: React.FC<PillarsCtaCarouselProps> = ({ onNaviga
                       {slide.statement}
                     </h3>
 
-                    <p className="text-slate-300 md:text-slate-200 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed font-normal max-w-xl">
+                    <p className="text-slate-200 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed font-normal max-w-xl drop-shadow-xs">
                       {slide.supporting}
                     </p>
 
@@ -312,22 +268,22 @@ export const PillarsCtaCarousel: React.FC<PillarsCtaCarouselProps> = ({ onNaviga
             );
           })}
 
-          {/* Desktop Navigation Controls: Prev / Next Buttons */}
-          <div className="hidden md:flex absolute top-1/2 -translate-y-1/2 inset-x-3 sm:inset-x-6 items-center justify-between z-20 pointer-events-none">
+          {/* Navigation Controls: Prev / Next Buttons */}
+          <div className="flex absolute top-1/2 -translate-y-1/2 inset-x-2 sm:inset-x-4 md:inset-x-6 items-center justify-between z-20 pointer-events-none">
             <button
               onClick={prevSlide}
               aria-label="Previous slide"
-              className="pointer-events-auto w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-xs border border-white/15 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              className="pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-xs border border-white/15 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             </button>
 
             <button
               onClick={nextSlide}
               aria-label="Next slide"
-              className="pointer-events-auto w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-xs border border-white/15 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              className="pointer-events-auto w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-xs border border-white/15 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             >
-              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             </button>
           </div>
 

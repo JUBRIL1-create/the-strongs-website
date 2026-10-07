@@ -95,4 +95,19 @@ const notFoundFile = path.join(distDir, '404.html');
 fs.writeFileSync(notFoundFile, templateHtml, 'utf8');
 console.log(`[generate-routes] ✓ Created 404.html (GitHub Pages universal fallback)`);
 
+// Guarantee and verify dist/sitemap.xml
+const publicSitemap = path.resolve(__dirname, '../public/sitemap.xml');
+const distSitemap = path.join(distDir, 'sitemap.xml');
+if (!fs.existsSync(distSitemap) && fs.existsSync(publicSitemap)) {
+  fs.copyFileSync(publicSitemap, distSitemap);
+}
+if (fs.existsSync(distSitemap)) {
+  const content = fs.readFileSync(distSitemap, 'utf8');
+  if (content.startsWith('<?xml') && content.includes('<urlset')) {
+    console.log('[generate-routes] ✓ Verified dist/sitemap.xml exists and has valid XML structure');
+  } else {
+    console.warn('[generate-routes] ⚠ Warning: dist/sitemap.xml format mismatch');
+  }
+}
+
 console.log('[generate-routes] All public route HTML files successfully created!');

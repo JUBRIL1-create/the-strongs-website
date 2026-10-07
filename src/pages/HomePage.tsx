@@ -3,9 +3,7 @@ import {
   Compass,
   ArrowRight,
   ChevronDown,
-  CheckCircle2,
   Calendar,
-  ShieldAlert,
 } from 'lucide-react';
 import { SITE_CONFIG } from '../config/site';
 import { NEWS_ARTICLES } from '../data/news';
@@ -16,6 +14,45 @@ import { SEO } from '../components/SEO';
 import { HeroImageSection } from '../components/HeroImageSection';
 import { PillarsCtaCarousel } from '../components/PillarsCtaCarousel';
 import { getProjects, getNews } from '../services/supabaseService';
+
+const DEFAULT_PROJECTS: Project[] = [
+  {
+    id: 'strongsconnect',
+    title: 'StrongsConnect',
+    slug: 'strongsconnect',
+    category: 'HealthTech',
+    status: 'Prototype',
+    dateStarted: '2026',
+    shortDescription:
+      'A pioneering healthcare and emergency support platform providing digital access to health information and emergency services.',
+    fullDescription:
+      'A pioneering healthcare and emergency support platform providing digital access to health information and emergency services.',
+    problem:
+      'Limited access to emergency support and reliable healthcare information at the grassroots.',
+    objectives: [],
+    featured: true,
+    createdAt: '2026-01-01',
+    updatedAt: '2026-01-01',
+  },
+  {
+    id: 'strong-soil',
+    title: 'STRONG SOIL',
+    slug: 'strong-soil',
+    category: 'AgriTech & IoT',
+    status: 'Prototype',
+    dateStarted: '2026',
+    shortDescription:
+      'Low-cost soil moisture sensor system integrating accessible IoT and local agronomy data for smallholder farming communities.',
+    fullDescription:
+      'Low-cost soil moisture sensor system integrating accessible IoT and local agronomy data for smallholder farming communities.',
+    problem:
+      'Lack of accessible soil condition data for smallholder farmers leading to crop vulnerability.',
+    objectives: [],
+    featured: false,
+    createdAt: '2026-01-01',
+    updatedAt: '2026-01-01',
+  },
+];
 
 interface HomePageProps {
   onNavigate: (path: string) => void;
@@ -50,10 +87,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
     };
   }, []);
 
+  const projectsToDisplay = projectsList.length > 0 ? projectsList : DEFAULT_PROJECTS;
+
   const flagshipProject =
-    projectsList.find((p) => p.id === 'strongsconnect' || p.slug === 'strongsconnect' || p.id === '1') ||
-    projectsList[0] ||
-    null;
+    projectsToDisplay.find((p) => p.id === 'strongsconnect' || p.slug === 'strongsconnect' || p.id === '1') ||
+    projectsToDisplay[0];
   const recentNews = newsList.slice(0, 3);
 
   const toggleFaq = (id: string) => {
@@ -106,111 +144,72 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       {/* SECTION 3 — WHAT DRIVES OUR INNOVATION (RELOCATED FOUR-SLIDE CAROUSEL) */}
       <PillarsCtaCarousel onNavigate={onNavigate} />
 
-      {/* SECTION 4 — FEATURED INNOVATION (FLAGSHIP: StrongsConnect) */}
-      <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
+      {/* SECTION 4 — CURRENT PROJECT */}
+      <section className="py-16 sm:py-20 bg-slate-900 text-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="p-8 sm:p-12 rounded-3xl bg-slate-800/80 border border-slate-700/80 shadow-2xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="p-8 sm:p-10 rounded-3xl bg-slate-800/80 border border-slate-700/80 shadow-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
               
-              <div className="lg:col-span-8 space-y-6">
-                <div className="flex flex-wrap items-center gap-3">
+              <div className="lg:col-span-7 space-y-5">
+                <div className="flex flex-wrap items-center gap-2.5">
                   <span className="px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold tracking-wider uppercase">
-                    CURRENT INNOVATION
+                    CURRENT PROJECT
                   </span>
-                  <span className="px-3 py-1 rounded-md bg-slate-700 text-slate-300 text-xs font-semibold">
-                    PROTOTYPE &bull; 2026
+                  <span className="px-3 py-1 rounded-md bg-slate-700/80 text-slate-300 text-xs font-semibold">
+                    {flagshipProject.status} &bull; 2026
                   </span>
                   <span className="px-3 py-1 rounded-md bg-sky-500/20 text-sky-300 text-xs font-semibold">
-                    HealthTech
+                    {flagshipProject.category}
                   </span>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="inline-flex max-w-full">
-                    <BrandLogo
-                      variant="strongsconnect"
-                      size="lg"
-                      className="bg-white p-3.5 sm:p-4 rounded-2xl text-slate-900 border border-slate-100 shadow-sm overflow-hidden"
-                    />
-                  </div>
-                  <p className="text-slate-300 text-base sm:text-lg leading-relaxed pt-3">
-                    &ldquo;{flagshipProject?.shortDescription || "A pioneering healthcare and emergency support platform providing digital access to health information and emergency services."}&rdquo;
+                <div className="space-y-1.5">
+                  <h3 className="font-display font-bold text-3xl sm:text-4xl text-white tracking-tight">
+                    {flagshipProject.title}
+                  </h3>
+                  <p className="text-emerald-400 font-medium text-sm sm:text-base">
+                    Healthcare & Emergency Support Platform
                   </p>
                 </div>
 
-                {/* Core components bullets */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-slate-300">
-                  {flagshipProject?.components && flagshipProject.components.length > 0 ? (
-                    flagshipProject.components.slice(0, 4).map((comp) => (
-                      <div key={comp.name} className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>{comp.name}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <>
-                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Smart Drug Verification Analysis (Proposed)</span>
-                      </div>
-                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Clinical Case Research Exchange (Proposed)</span>
-                      </div>
-                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Interactive First Aid Emergency Modules</span>
-                      </div>
-                      <div className="flex items-start gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Verified Healthcare Information Layer</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {/* Accuracy Disclaimer */}
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs">
-                  <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>
-                    Note: StrongsConnect is an active development prototype (2026). Functionality is currently proposed / developing and is not yet clinically validated or commercially deployed.
-                  </span>
-                </div>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+                  StrongsConnect is a digital healthcare and emergency support platform developed by THE STRONGS. It addresses critical gaps in timely first-aid guidance, verified medical information, and emergency assistance across local communities. Designed for practical impact, the platform leverages accessible technology to deliver essential healthcare support where it is needed most.
+                </p>
 
                 <div className="pt-2">
                   <button
-                    onClick={() => onNavigate(`/projects/${flagshipProject?.slug || 'strongsconnect'}`)}
-                    className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-md transition-all cursor-pointer"
+                    onClick={() => onNavigate(`/projects/${flagshipProject.slug}`)}
+                    className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-md transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
                   >
-                    <span>Explore StrongsConnect Project Story</span>
+                    <span>Explore Project</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              {/* Graphic Card Right */}
-              <div className="lg:col-span-4 bg-slate-900/90 p-6 rounded-2xl border border-slate-700/80 space-y-4 text-xs text-slate-300">
-                <div className="font-display font-semibold text-white text-sm border-b border-slate-800 pb-2">
-                  PROPOSED AI CAPABILITIES
+              {/* Existing Project Image / Design */}
+              <div className="lg:col-span-5 flex justify-center lg:justify-end">
+                <div className="w-full max-w-sm bg-slate-900/90 p-8 rounded-2xl border border-slate-700/80 shadow-inner flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-md">
+                    <img
+                      src={SITE_CONFIG.logos.strongsConnect}
+                      alt={flagshipProject.title}
+                      className="w-16 h-16 object-contain"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-bold text-xl text-white">
+                      {flagshipProject.title}
+                    </h4>
+                    <span className="text-xs font-medium text-sky-400 uppercase tracking-wider">
+                      Flagship Prototype
+                    </span>
+                  </div>
+                  <div className="w-full pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                    <span>Active Development</span>
+                    <span className="text-emerald-400 font-semibold">2026 Initiative</span>
+                  </div>
                 </div>
-                <ul className="space-y-2.5">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-                    <span>Packaging feature & barcode analysis</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-                    <span>Anonymised clinical case recommendations</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-                    <span>Personalised first-aid learning paths</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
-                    <span>Grassroots health trend identification</span>
-                  </li>
-                </ul>
               </div>
 
             </div>
@@ -218,16 +217,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* SECTION 5 — PROJECTS PREVIEW */}
-      <section className="py-20 bg-white border-b border-slate-100">
+      {/* SECTION 5 — OUR PROJECTS */}
+      <section className="py-16 sm:py-20 bg-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div>
               <span className="text-xs font-semibold text-emerald-700 tracking-widest uppercase">
                 PORTFOLIO
               </span>
               <h2 className="font-display font-bold text-3xl sm:text-4xl text-slate-900 mt-1">
-                Initiatives & Projects
+                Our Projects
               </h2>
             </div>
             <button
@@ -239,34 +238,59 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projectsList.map((project) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            {projectsToDisplay.map((project) => (
               <div
                 key={project.id}
-                className="bg-[#fafafa] p-6 sm:p-8 rounded-3xl border border-slate-200/80 hover:border-emerald-300 transition-all shadow-2xs hover:shadow-md flex flex-col justify-between"
+                className="bg-[#fafafa] p-6 sm:p-7 rounded-3xl border border-slate-200/80 hover:border-emerald-300 transition-all shadow-2xs hover:shadow-sm flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-800">
-                      {project.category}
-                    </span>
-                    <span className="text-xs font-medium px-2.5 py-0.5 rounded-md bg-slate-200/70 text-slate-700">
-                      {project.status} &bull; {project.dateStarted}
-                    </span>
+                  {/* Top: Project Image, Category & Status */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200/80 p-2 flex items-center justify-center shrink-0 shadow-2xs">
+                      {project.slug === 'strongsconnect' ? (
+                        <img
+                          src={SITE_CONFIG.logos.strongsConnect}
+                          alt={project.title}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : project.images && project.images[0] ? (
+                        <img
+                          src={project.images[0]}
+                          alt={project.title}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700">
+                          <Compass className="w-5 h-5" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-end gap-1.5">
+                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800">
+                        {project.category}
+                      </span>
+                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-700">
+                        {project.status}
+                      </span>
+                    </div>
                   </div>
 
-                  <h3 className="font-display font-bold text-2xl text-slate-900">
-                    {project.title}
-                  </h3>
-
-                  <p className="text-slate-600 text-sm leading-relaxed">
-                    {project.shortDescription}
-                  </p>
+                  <div>
+                    <h3 className="font-display font-bold text-xl sm:text-2xl text-slate-900">
+                      {project.title}
+                    </h3>
+                    <p className="text-slate-600 text-sm leading-relaxed mt-2 line-clamp-2">
+                      {project.shortDescription}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-slate-200/60 flex items-center justify-between">
+                {/* Bottom: Action link */}
+                <div className="pt-4 mt-5 border-t border-slate-200/60 flex items-center justify-between">
                   <span className="text-xs text-slate-500">
-                    {project.featured ? 'Featured Initiative' : 'Research Project'}
+                    {project.dateStarted ? `Initiated ${project.dateStarted}` : 'Active Project'}
                   </span>
                   <button
                     onClick={() => onNavigate(`/projects/${project.slug}`)}

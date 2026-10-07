@@ -57,8 +57,8 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
-        title="Contact Us"
-        description="Get in touch with THE STRONGS. Email: thestrongsinitiatives@gmail.com."
+        title="Contact THE STRONGS"
+        description="Get in touch with THE STRONGS team for partnership inquiries, technology collaborations, research participation, or media requests."
         slug="contact"
       />
 

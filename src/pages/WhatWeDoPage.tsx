@@ -9,7 +9,11 @@ interface WhatWeDoPageProps {
 export const WhatWeDoPage: React.FC<WhatWeDoPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
-      <SEO title="What We Do" description="THE STRONGS brings innovation, research and practical technology closer to people and industries." slug="what-we-do" />
+      <SEO
+        title="What We Do | THE STRONGS"
+        description="Explore how THE STRONGS applies innovation, scientific research, technology, and sustainability to solve systemic, real-world community challenges."
+        slug="what-we-do"
+      />
 
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">

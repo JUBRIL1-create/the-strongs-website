@@ -62,7 +62,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
-      <SEO title="Home" description={SITE_CONFIG.seo.defaultDescription} slug="" />
+      <SEO title="THE STRONGS | Innovating for a Better Tomorrow" description={SITE_CONFIG.seo.defaultDescription} slug="" />
 
       {/* SECTION 1 — PREMIUM HERO IMAGE SECTION */}
       <HeroImageSection onNavigate={onNavigate} />

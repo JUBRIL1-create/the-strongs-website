@@ -33,8 +33,8 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
-        title="Events & Briefings"
-        description="Upcoming and past events, virtual briefings, and research symposiums hosted by THE STRONGS."
+        title="Events | THE STRONGS"
+        description="Discover upcoming virtual briefings, research workshops, community sessions, and innovation announcements hosted by THE STRONGS."
         slug="events"
       />
 

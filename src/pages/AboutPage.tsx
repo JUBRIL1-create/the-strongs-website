@@ -10,7 +10,11 @@ interface AboutPageProps {
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
-      <SEO title="About Us & Our Story" description="Discover the founding story, mission, and vision of THE STRONGS." slug="about" />
+      <SEO
+        title="About THE STRONGS | Innovation, Research & Impact"
+        description="Learn about the founding story, mission, and vision of THE STRONGS, an innovation initiative advancing research, sustainability, and grassroots technology."
+        slug="about"
+      />
 
       {/* Header Banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">

@@ -17,18 +17,18 @@ const templateHtml = fs.readFileSync(templatePath, 'utf8');
 const PUBLIC_ROUTES = [
   {
     path: 'about',
-    title: 'About Us & Our Story | THE STRONGS',
-    description: 'Discover the founding story, mission, and vision of THE STRONGS.',
+    title: 'About THE STRONGS | Innovation, Research & Impact',
+    description: 'Learn about the founding story, mission, and vision of THE STRONGS, an innovation initiative advancing research, sustainability, and grassroots technology.',
   },
   {
     path: 'what-we-do',
     title: 'What We Do | THE STRONGS',
-    description: 'THE STRONGS brings innovation, research and practical technology closer to people and industries.',
+    description: 'Explore how THE STRONGS applies innovation, scientific research, technology, and sustainability to solve systemic, real-world community challenges.',
   },
   {
     path: 'projects',
-    title: 'Initiatives & Projects | THE STRONGS',
-    description: 'Explore the initiatives and technology projects developed by THE STRONGS.',
+    title: 'Projects | THE STRONGS',
+    description: 'Explore innovation and research initiatives developed by THE STRONGS, including StrongsConnect healthcare access and agricultural IoT technology.',
   },
   {
     path: 'projects/strongsconnect',
@@ -42,28 +42,28 @@ const PUBLIC_ROUTES = [
   },
   {
     path: 'news',
-    title: 'News & Milestone Announcements | THE STRONGS',
-    description: 'Stay informed about core developments, project milestones, and research publications from THE STRONGS.',
+    title: 'News | THE STRONGS',
+    description: 'Read the latest news, milestone announcements, and research publications from THE STRONGS team as we build practical technology solutions.',
   },
   {
     path: 'events',
-    title: 'Events & Briefings | THE STRONGS',
-    description: 'Participate in our virtual briefings, research workshops, and innovation announcements.',
+    title: 'Events | THE STRONGS',
+    description: 'Discover upcoming virtual briefings, research workshops, community sessions, and innovation announcements hosted by THE STRONGS.',
   },
   {
     path: 'team',
-    title: 'Our Team & Leadership | THE STRONGS',
-    description: 'Meet the founders, researchers, and core contributors behind THE STRONGS.',
+    title: 'Our Team | THE STRONGS',
+    description: 'Meet the founding team, researchers, and innovators behind THE STRONGS dedicated to creating accessible, high-impact technology solutions.',
   },
   {
     path: 'partners',
-    title: 'Partners & Collaboration | THE STRONGS',
-    description: 'Meaningful innovation grows through collaboration. Partner with THE STRONGS to create practical solutions for a better tomorrow.',
+    title: 'Partners | THE STRONGS',
+    description: 'Collaborate with THE STRONGS through research partnerships, technology co-development, and grassroots innovation programs to scale social impact.',
   },
   {
     path: 'contact',
-    title: 'Contact Us | THE STRONGS',
-    description: 'Get in touch with THE STRONGS team for partnership, research collaborations, or general inquiries.',
+    title: 'Contact THE STRONGS',
+    description: 'Get in touch with THE STRONGS team for partnership inquiries, technology collaborations, research participation, or media requests.',
   },
 ];
 

@@ -20,8 +20,8 @@ export const PartnersPage: React.FC<PartnersPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
-        title="Partnerships & Support"
-        description="Collaborate with THE STRONGS in research, technology development, and grassroots initiatives."
+        title="Partners | THE STRONGS"
+        description="Collaborate with THE STRONGS through research partnerships, technology co-development, and grassroots innovation programs to scale social impact."
         slug="partners"
       />
 

@@ -60,8 +60,8 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
-        title="Projects & Innovations"
-        description="Explore projects developed by THE STRONGS across healthtech, sustainability, and grassroots technology."
+        title="Projects | THE STRONGS"
+        description="Explore innovation and research initiatives developed by THE STRONGS, including StrongsConnect healthcare access and agricultural IoT technology."
         slug="projects"
       />
 

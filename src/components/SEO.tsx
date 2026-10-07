@@ -15,34 +15,45 @@ export const SEO: React.FC<SEOProps> = ({
   type = 'website',
 }) => {
   const pageTitle = title
-    ? `${title} | ${SITE_CONFIG.name}`
+    ? (title.includes(SITE_CONFIG.name) ? title : `${title} | ${SITE_CONFIG.name}`)
     : SITE_CONFIG.seo.defaultTitle;
 
-  const canonicalUrl = `${SITE_CONFIG.seo.siteUrl}${slug ? `/${slug}` : ''}`;
+  const cleanSlug = slug.replace(/^\/+/, '').replace(/\/+$/, '');
+  const canonicalUrl = cleanSlug
+    ? `${SITE_CONFIG.seo.siteUrl}/${cleanSlug}`
+    : `${SITE_CONFIG.seo.siteUrl}/`;
 
   useEffect(() => {
     document.title = pageTitle;
 
-    // Update meta tags dynamically
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    }
+    // Helper to ensure meta tag exists and update content
+    const setMeta = (attrName: string, attrVal: string, content: string) => {
+      let meta = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attrName, attrVal);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
 
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) {
-      ogTitle.setAttribute('content', pageTitle);
-    }
+    // Standard meta tags
+    setMeta('name', 'description', description);
+    setMeta('name', 'robots', 'index, follow');
 
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) {
-      ogDesc.setAttribute('content', description);
-    }
+    // Open Graph meta tags
+    setMeta('property', 'og:type', type);
+    setMeta('property', 'og:site_name', SITE_CONFIG.name);
+    setMeta('property', 'og:title', pageTitle);
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:url', canonicalUrl);
+    setMeta('property', 'og:image', SITE_CONFIG.logos.profileImage);
 
-    const ogImg = document.querySelector('meta[property="og:image"]');
-    if (ogImg) {
-      ogImg.setAttribute('content', SITE_CONFIG.logos.profileImage);
-    }
+    // Twitter / X card tags
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', pageTitle);
+    setMeta('name', 'twitter:description', description);
+    setMeta('name', 'twitter:image', SITE_CONFIG.logos.profileImage);
 
     // Update canonical link dynamically
     let canonicalLink = document.querySelector('link[rel="canonical"]');
@@ -52,52 +63,6 @@ export const SEO: React.FC<SEOProps> = ({
       document.head.appendChild(canonicalLink);
     }
     canonicalLink.setAttribute('href', canonicalUrl);
-
-    // Update Open Graph URL dynamically
-    let ogUrl = document.querySelector('meta[property="og:url"]');
-    if (!ogUrl) {
-      ogUrl = document.createElement('meta');
-      ogUrl.setAttribute('property', 'og:url');
-      document.head.appendChild(ogUrl);
-    }
-    ogUrl.setAttribute('content', canonicalUrl);
-
-    // Inject JSON-LD structured data
-    const existingScript = document.getElementById('json-ld-org');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.id = 'json-ld-org';
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'NGO',
-        name: SITE_CONFIG.name,
-        alternateName: SITE_CONFIG.fullName,
-        url: SITE_CONFIG.seo.siteUrl,
-        logo: `${SITE_CONFIG.seo.siteUrl}/assets/branding/the-strongs-logo.png`,
-        image: SITE_CONFIG.logos.profileImage,
-        description: SITE_CONFIG.seo.defaultDescription,
-        foundingDate: '2026',
-        foundingLocation: {
-          '@type': 'Place',
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: SITE_CONFIG.location.state,
-            addressCountry: SITE_CONFIG.location.country,
-          },
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          email: SITE_CONFIG.contact.email,
-          contactType: 'General Inquiries',
-        },
-        sameAs: [
-          SITE_CONFIG.social.instagram.url,
-          SITE_CONFIG.social.youtube.url,
-        ],
-      });
-      document.head.appendChild(script);
-    }
   }, [pageTitle, description, canonicalUrl]);
 
   return null;

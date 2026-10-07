@@ -49,7 +49,7 @@ export const SITE_CONFIG = {
   seo: {
     defaultTitle: "THE STRONGS | Innovating for a Better Tomorrow",
     defaultDescription:
-      "THE STRONGS drives innovation, research and practical technology solutions to address real-world challenges, improve everyday life and build a more sustainable future.",
+      "THE STRONGS is an innovation and research initiative focused on practical technology, sustainability, and solutions for a better tomorrow.",
     keywords: [
       "THE STRONGS",
       "innovation",

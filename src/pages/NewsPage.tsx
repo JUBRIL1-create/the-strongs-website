@@ -33,8 +33,8 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
-        title="News & Updates"
-        description="Official announcements, milestones, and organisational updates from THE STRONGS."
+        title="News | THE STRONGS"
+        description="Read the latest news, milestone announcements, and research publications from THE STRONGS team as we build practical technology solutions."
         slug="news"
       />
 

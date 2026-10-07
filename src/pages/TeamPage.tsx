@@ -55,8 +55,8 @@ export const TeamPage: React.FC<TeamPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#fafafa] pt-28 pb-20">
       <SEO
-        title="Our Team & Founders"
-        description="Meet the founding members of THE STRONGS."
+        title="Our Team | THE STRONGS"
+        description="Meet the founding team, researchers, and innovators behind THE STRONGS dedicated to creating accessible, high-impact technology solutions."
         slug="team"
       />
 

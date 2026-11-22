@@ -63,16 +63,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src={primaryLogoUrl}
         alt="THE STRONGS Official Logo"
-        className={`${dimensions.img} rounded-xl object-contain shadow-xs shrink-0`}
-        onError={(e) => {
-          const target = e.currentTarget;
-          if (!target.src.includes('/assets/branding/the-strongs-logo.png')) {
-            target.src = '/assets/branding/the-strongs-logo.png';
-          } else {
-            setImageError(true);
-          }
-        }}
-        referrerPolicy="no-referrer"
+        className={`${dimensions.img} aspect-square rounded-xl object-contain bg-white shadow-xs shrink-0`}
+        onError={() => setImageError(true)}
       />
       <div className="flex flex-col">
         <span className={`font-display font-extrabold text-slate-900 tracking-wider ${dimensions.text} leading-tight`}>

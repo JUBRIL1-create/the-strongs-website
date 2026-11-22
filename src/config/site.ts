@@ -35,9 +35,9 @@ export const SITE_CONFIG = {
     },
   },
   logos: {
-    primary: "https://drive.google.com/file/d/1dwLSRn1MTJtIzDfUYVVLlx2Ie1ilZh86/view?usp=drivesdk",
+    primary: "/brand/strongs-initiative-logo.jpg",
     strongsConnect: "/assets/branding/strongsconnect-logo.svg",
-    profileImage: "https://i.postimg.cc/0jkFSsY3/file-00000000d35481f498e008356a18d52a.jpg",
+    profileImage: "https://strongsinitiative.com/brand/strongs-initiative-logo.jpg",
   },
   donations: {
     enabled: true,

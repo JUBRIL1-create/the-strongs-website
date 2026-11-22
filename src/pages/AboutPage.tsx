@@ -67,12 +67,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
             {/* Official Organisation Profile Visual Card */}
             <div className="lg:col-span-5">
-              <div className="rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-900">
+              <div className="rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-white">
                 <img
-                  src="https://i.postimg.cc/0jkFSsY3/file-00000000d35481f498e008356a18d52a.jpg"
-                  alt="THE STRONGS official profile image"
-                  className="w-full h-auto object-cover"
-                  referrerPolicy="no-referrer"
+                  src={SITE_CONFIG.logos.primary}
+                  alt="THE STRONGS official brand logo"
+                  className="w-full aspect-square object-contain"
                 />
               </div>
             </div>
